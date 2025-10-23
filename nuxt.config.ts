@@ -6,5 +6,10 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss', 
-  ]
+  ],
+  runtimeConfig: {
+    // Private variables: only available server-side
+    apiBaseurl: process.env.API_BASEURL || '',
+    xApiKey: process.env.X_API_KEY || '',
+}
 })

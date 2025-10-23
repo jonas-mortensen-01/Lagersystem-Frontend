@@ -1,19 +1,22 @@
 import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('main', {
+    
     // Globally available fields
     state: () => ({
-        user: "stuff user",
+        apiBaseurl: '',
+        xApiKey: '',
+
+        // This field will represent the current state of loading for the entire site
+        hasLoaded: false,
+        pageData: null,
     }),
 
     // Globally available functions
     actions: {
-        // Examples
-        // setUser(userData: { name: string; email: string }) {
-        //   this.user = userData
-        // },
-        // setTheme(theme: 'light' | 'dark') {
-        //   this.theme = theme
-        // },
+       setConfig(runtimeConfig: any) {
+        this.apiBaseurl = runtimeConfig.apiBaseurl;
+        this.xApiKey = runtimeConfig.xApiKey;
+        },
     },
 })
