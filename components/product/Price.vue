@@ -8,7 +8,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useMainStore } from '../../stores/store';
 
 // Types
 import type PriceModel from '../../types/price'
@@ -20,11 +19,6 @@ export default defineComponent({
       type: Object as () => PriceModel, // TypeScript type
       required: true
     }
-  },
-  setup() {
-    const store = useMainStore()
-
-    return { store }
-  },
+  }
 })
 </script>

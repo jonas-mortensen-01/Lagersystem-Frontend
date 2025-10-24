@@ -10,9 +10,12 @@
             <h1 class="text-3xl font-bold">Warehouse site</h1>
         </nuxt-link>
 
-        <div class="px-[1rem]">
-            search
-        </div>
+        <nuxt-link
+          to="/search"
+          class="hover:underline text-white px-[1rem] rounded-lg transition text-sm"
+        >
+            Search
+        </nuxt-link>
       </div>
 
       <!-- Admin products link -->

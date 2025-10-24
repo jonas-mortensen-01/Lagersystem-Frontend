@@ -13,7 +13,7 @@ export const useMainStore = defineStore('main', {
         // This field will represent the current state of loading for the entire site
         hasLoaded: false,
         currentPage: {} as any,
-        siteProducts: [] as any[],
+        siteProducts: [] as ProductModel[],
     }),
 
     // Globally available functions

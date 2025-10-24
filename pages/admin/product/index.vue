@@ -28,26 +28,8 @@
       v-if="visibleProducts.length"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
-      <div
-        v-for="product in visibleProducts"
-        :key="product.id"
-        @click="openEditModal(product)"
-        class="flex justify-between bg-white shadow-lg rounded-lg p-4 cursor-pointer hover:ring hover:ring-blue-300 transition"
-      >
-        <div class="mr-[4px]">
-          <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
-          <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ product.description }}</p>
-          <p class="text-green-700 font-semibold">
-            {{ product.price.amount }} {{ product.price.currencySymbol }}
-          </p>
-        </div>
-        <img
-          v-if="product.imagePath"
-          :src="product.imagePath"
-          alt="Product image"
-          class="h-20 object-cover rounded-lg mb-3"
-        />
-      </div>
+        <ProductAdminItem v-for="product in visibleProducts" :product="product" @openEditModal="openEditModal"></ProductAdminItem>
+      
     </div>
 
     <p v-else-if="searchTerm === ''" class="text-gray-500 text-center mt-12">
@@ -186,6 +168,9 @@ import { useMainStore } from '../../../stores/store'
 // Types
 import type ProductModel from '~/types/product/product'
 
+// Components
+import ProductAdminItem from '../../../components/product/ProductAdminItem.vue'
+
 const store = useMainStore()
 
 // Modal & form
@@ -275,7 +260,7 @@ const handleSubmit = () => {
     editingProduct.value.imagePath = form.imagePath
   } else {
     const newProduct: ProductModel = {
-      id: crypto.randomUUID(),
+      id: "",
       name: form.name,
       description: form.description,
       imagePath: form.imagePath,

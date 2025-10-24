@@ -6,4 +6,5 @@ export default interface Product {
     description: string;
     imagePath: string;
     price: PriceModel;
+    slug?: string;
 }
