@@ -205,7 +205,7 @@ const form = reactive({
 // --- Combined computed for filtering + pagination ---
 const visibleProducts = computed(() => {
   const term = searchTerm.value.toLowerCase().trim()
-  let filtered = store.currentPage.pageData?.products || []
+  let filtered = store.siteProducts || []
 
   if (term) {
     filtered = filtered.filter((p: any) =>
@@ -224,7 +224,7 @@ const visibleProducts = computed(() => {
 // Total pages for current search
 const totalPages = computed(() => {
   const term = searchTerm.value.toLowerCase().trim()
-  const filteredCount = store.currentPage.pageData?.products?.filter((p: any) =>
+  const filteredCount = store.siteProducts?.filter((p: any) =>
     term
       ? p.name.toLowerCase().includes(term) ||
         p.description.toLowerCase().includes(term) ||
@@ -281,18 +281,18 @@ const handleSubmit = () => {
       imagePath: form.imagePath,
       price: { amount: form.amount, formattedPrice: '', currencySymbol: 'DKK' }
     }
-    if (!store.currentPage.pageData.products) store.currentPage.pageData.products = []
-    store.currentPage.pageData.products.push(newProduct)
+    if (!store.siteProducts) store.siteProducts = []
+    store.siteProducts.push(newProduct)
   }
   closeModal()
 }
 
 const deleteCurrentProduct = () => {
   if (!editingProduct.value) return
-  const index = store.currentPage.pageData.products.findIndex(
+  const index = store.siteProducts.findIndex(
     (p: ProductModel) => p.id === editingProduct.value!.id
   )
-  if (index !== -1) store.currentPage.pageData.products.splice(index, 1)
+  if (index !== -1) store.siteProducts.splice(index, 1)
   closeModal()
 }
 
