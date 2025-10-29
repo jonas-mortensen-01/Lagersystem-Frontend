@@ -4,7 +4,7 @@
         <div class="mr-[4px]">
             <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
             <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ product.description }}</p>
-            <p class="text-green-700 font-semibold">
+            <p v-if="product?.price?.amount" class="text-green-700 font-semibold">
                 {{ product.price.amount }} {{ product.price.currencySymbol }}
             </p>
         </div>

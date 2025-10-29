@@ -1,4 +1,5 @@
 import type PriceModel from '../price';
+import type InventoryEntryModel from './inventoryEntry';
 
 export default interface Product {
     id: string;
@@ -7,4 +8,5 @@ export default interface Product {
     imagePath: string;
     price: PriceModel;
     slug?: string;
+    inventory?: InventoryEntryModel[];
 }

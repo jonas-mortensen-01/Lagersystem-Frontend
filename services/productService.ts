@@ -14,7 +14,7 @@ export default class ProductService {
 
     async getProducts(productId?: string): Promise<Array<any>> {
         try {
-            const response = await axios.get<Array<any>>(`${this.store.apiBaseurl}/product/someplacetofetchit`, {
+            const response = await axios.get<Array<any>>(`${this.store.apiBaseurl}/products`, {
                 params: {
                     id: JSON.stringify(productId)
                 },
@@ -25,12 +25,16 @@ export default class ProductService {
             });
 
             if (response.data) {
-                return this.productHelper.mapProductModelListFromResponse(response.data)
+                var mappedData = this.productHelper.mapProductModelListFromResponse(response.data)
+            
+                console.log("data from products", mappedData);
+
+                return mappedData
             }
 
             return response.data;
         } catch (error) {
-            throw new Error('Error getting products by ids: ' + error);
+            throw new Error('Error getting products: ' + error);
         }
     }
 

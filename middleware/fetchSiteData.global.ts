@@ -1,6 +1,11 @@
 import { useMainStore } from '../stores/store';
 
+// Services
+import ProductService from '../services/productService';
+
 export default defineNuxtRouteMiddleware(async (to: any) => {
+    var productService = new ProductService;
+
     if (!to.path || to.path === "/null") {
         console.error("Invalid route detected:", to.path);
         return;
@@ -18,5 +23,9 @@ export default defineNuxtRouteMiddleware(async (to: any) => {
             apiBaseurl: config.apiBaseurl,
             // xApiKey: config.xApiKey,
         });
+
+        var products = await productService.getProducts();
+        store.siteProducts = products;
+        console.log("products", products)
     }
 });

@@ -38,7 +38,7 @@
                     across development and production.
                 </p>
                 <p class="text-gray-600">
-                    Our backend is designed to be scalable, maintainable, and secure, providing a robust API for the
+                    Our backend is designed to be scalable and maintainable, providing a robust API for the
                     frontend
                     to interact with efficiently.
                 </p>
@@ -49,7 +49,7 @@
         <section class="container mx-auto py-16 px-4">
             <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Our Team</h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 <PersonDisplay name="Mikkel Jacobsen" role="Backend Developer" :image="null" />
                 <PersonDisplay name="Emil Nordahn" role="Backend Developer" :image="null" />
                 <PersonDisplay name="Jonas Kristoffer Mortensen" role="Frontend / UI Developer" :image="null" />

@@ -1,6 +1,6 @@
 <template>
   <header class="bg-blue-600 text-white py-3 shadow-md">
-    <div class="flex container mx-auto flex flex-col md:flex-row justify-between px-4">
+    <div class="flex container mx-auto flex flex-col justify-between px-4">
       <!-- Main site title -->
       <div class="flex justify-between items-center md:text-left mb-4 md:mb-0">
         <nuxt-link

@@ -7,11 +7,13 @@ import type ProductModel from '../types/product/product';
 export default class ProductHelper {
     priceHelper: PriceHelper = new PriceHelper;
 
-    mapProductModelListFromResponse(data: any): ProductModel[] {
+    mapProductModelListFromResponse(rawData: any): ProductModel[] {
+        const data = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+
         let result: ProductModel[] = [];
 
         data.forEach((item: any) => {
-            var product = this.mapProductModelFromResponse(data);
+            var product = this.mapProductModelFromResponse(item);
             if (product) {
                 result.push(product);
             }
@@ -29,6 +31,8 @@ export default class ProductHelper {
                 name: data.name ?? "",
                 description: data.description ?? "",
                 price: this.priceHelper.mapPrice(data.price),  
+                imagePath: data.imagePath ?? "",
+                slug: data.name ?? "",
             } as ProductModel
         }
 

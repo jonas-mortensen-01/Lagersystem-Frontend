@@ -7,9 +7,9 @@ export default class PriceHelper {
 
         if (data) {
             price = {
-                currencySymbol: data.currencySymbol ?? "",
+                currencySymbol: "DKK",
                 formattedPrice: "",
-                amount: data.amount,
+                amount: data,
             } as PriceModel
         }
 

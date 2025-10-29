@@ -1,7 +1,7 @@
 <template>
-    <div v-if="price" class="mt-[.5em]">
+    <div v-if="price" class="text-xl">
         <div>
-            <p>{{ price.formattedPrice }}</p>
+            <p class="font-semibold">{{ price.formattedPrice }}</p>
         </div>
     </div>
 </template>
@@ -16,7 +16,7 @@ export default defineComponent({
   name: 'Price',
   props: {
     price: {
-      type: Object as () => PriceModel, // TypeScript type
+      type: Object as () => PriceModel,
       required: true
     }
   }

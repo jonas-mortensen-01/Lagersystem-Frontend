@@ -4,7 +4,7 @@
       <PageHeader>
         Some header
       </PageHeader>
-      <main>
+      <main class="mx-auto max-w-[80%]">
         <NuxtLayout>
           <NuxtPage/>
         </NuxtLayout>
