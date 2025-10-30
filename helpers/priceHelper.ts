@@ -9,11 +9,11 @@ export default class PriceHelper {
             price = {
                 currencySymbol: "DKK",
                 formattedPrice: "",
-                amount: data,
+                amount: data.amount,
             } as PriceModel
         }
 
-        price.formattedPrice = this.mapFormattedPrice(price.amount.toString(), price.currencySymbol);
+        price.formattedPrice = this.mapFormattedPrice(price.amount ? price.amount.toString() : "0", price.currencySymbol);
 
         return price;
     }

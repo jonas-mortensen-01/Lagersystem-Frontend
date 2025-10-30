@@ -28,8 +28,12 @@
       v-if="visibleProducts.length"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
-        <ProductAdminItem v-for="product in visibleProducts" :product="product" @openEditModal="openEditModal"></ProductAdminItem>
-      
+      <ProductAdminItem
+        v-for="product in visibleProducts"
+        :key="product.id"
+        :product="product"
+        @openEditModal="openEditModal"
+      />
     </div>
 
     <p v-else-if="searchTerm === ''" class="text-gray-500 text-center mt-12">
@@ -162,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from 'vue'
+import { reactive, ref, computed, watch, onMounted } from 'vue'
 import { useMainStore } from '../../../stores/store'
 
 // Types
@@ -171,9 +175,13 @@ import type ProductModel from '~/types/product/product'
 // Components
 import ProductAdminItem from '../../../components/product/ProductAdminItem.vue'
 
-const store = useMainStore()
+// Service
+import ProductService from '../../../services/productService'
 
-// Modal & form
+const store = useMainStore()
+const productService = new ProductService()
+
+// Modal & form state
 const showModal = ref(false)
 const editingProduct = ref<ProductModel | null>(null)
 const searchTerm = ref('')
@@ -187,7 +195,7 @@ const form = reactive({
   imagePath: ''
 })
 
-// --- Combined computed for filtering + pagination ---
+// --- Computed (filter + pagination) ---
 const visibleProducts = computed(() => {
   const term = searchTerm.value.toLowerCase().trim()
   let filtered = store.siteProducts || []
@@ -206,7 +214,6 @@ const visibleProducts = computed(() => {
   return filtered.slice(start, end)
 })
 
-// Total pages for current search
 const totalPages = computed(() => {
   const term = searchTerm.value.toLowerCase().trim()
   const filteredCount = store.siteProducts?.filter((p: any) =>
@@ -229,7 +236,6 @@ const goToNextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value++
 }
 
-// Reset page when search term changes
 watch(searchTerm, () => {
   currentPage.value = 1
 })
@@ -240,6 +246,7 @@ const openCreateModal = () => {
   resetForm()
   showModal.value = true
 }
+
 const openEditModal = (product: ProductModel) => {
   editingProduct.value = product
   form.name = product.name
@@ -248,37 +255,68 @@ const openEditModal = (product: ProductModel) => {
   form.imagePath = product.imagePath
   showModal.value = true
 }
+
 const closeModal = () => { showModal.value = false }
 
 // --- CRUD handlers ---
-const handleSubmit = () => {
-  if (editingProduct.value) {
-    editingProduct.value.name = form.name
-    editingProduct.value.description = form.description
-    editingProduct.value.price.amount = form.amount
-    editingProduct.value.price.currencySymbol = 'DKK'
-    editingProduct.value.imagePath = form.imagePath
-  } else {
-    const newProduct: ProductModel = {
-      id: "",
-      name: form.name,
-      description: form.description,
-      imagePath: form.imagePath,
-      price: { amount: form.amount, formattedPrice: '', currencySymbol: 'DKK' }
+const handleSubmit = async () => {
+  try {
+    if (editingProduct.value) {
+      // --- Update existing product ---
+      const updated = await productService.updateProduct(editingProduct.value.id, {
+        name: form.name,
+        description: form.description,
+        price: form.amount,
+        imagePath: form.imagePath
+      })
+
+      // Replace local entry with the updated one (from backend)
+      const index = store.siteProducts.findIndex(
+        (p: ProductModel) => p.id === editingProduct.value!.id
+      )
+
+      if (index !== -1) {
+        store.siteProducts.splice(index, 1, updated)
+      } else {
+        store.siteProducts.push(updated)
+      }
+
+    } else {
+      // --- Create new product ---
+      const created = await productService.createProduct({
+        name: form.name,
+        description: form.description,
+        amount: form.amount,
+        imagePath: form.imagePath
+      })
+
+      if (!store.siteProducts) store.siteProducts = []
+      store.siteProducts.push(created)
     }
-    if (!store.siteProducts) store.siteProducts = []
-    store.siteProducts.push(newProduct)
+
+    closeModal()
+  } catch (error) {
+    console.error('Error saving product:', error)
+    alert('Failed to save product. See console for details.')
   }
-  closeModal()
 }
 
-const deleteCurrentProduct = () => {
+const deleteCurrentProduct = async () => {
   if (!editingProduct.value) return
-  const index = store.siteProducts.findIndex(
-    (p: ProductModel) => p.id === editingProduct.value!.id
-  )
-  if (index !== -1) store.siteProducts.splice(index, 1)
-  closeModal()
+
+  try {
+    const success = await productService.deleteProduct(editingProduct.value.id)
+    if (success) {
+      const index = store.siteProducts.findIndex(
+        (p: ProductModel) => p.id === editingProduct.value!.id
+      )
+      if (index !== -1) store.siteProducts.splice(index, 1)
+    }
+    closeModal()
+  } catch (error) {
+    console.error('Error deleting product:', error)
+    alert('Failed to delete product. See console for details.')
+  }
 }
 
 // --- Helpers ---
@@ -289,8 +327,17 @@ const resetForm = () => {
   form.imagePath = ''
 }
 
-onMounted(() => {
-  if (!store.currentPage.pageData) store.currentPage.pageData = { products: [] }
+const loadProducts = async () => {
+  try {
+    const products = await productService.getProducts()
+    store.siteProducts = products
+  } catch (error) {
+    console.error('Error loading products:', error)
+  }
+}
+
+onMounted(async () => {
+  await loadProducts()
 })
 </script>
 

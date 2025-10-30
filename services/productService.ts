@@ -26,7 +26,7 @@ export default class ProductService {
 
             if (response.data) {
                 var mappedData = this.productHelper.mapProductModelListFromResponse(response.data)
-            
+
                 console.log("data from products", mappedData);
 
                 return mappedData
@@ -48,12 +48,12 @@ export default class ProductService {
             const formattedPayload = {
                 name: payload.name,
                 description: payload.description,
-                amount: payload.amount,
+                price: payload.amount,
                 imagePath: payload.imagePath
             }
 
             const response = await axios.post(
-                `${this.store.apiBaseurl}/product`,
+                `${this.store.apiBaseurl}/products`,
                 formattedPayload,
                 {
                     headers: {
@@ -73,17 +73,19 @@ export default class ProductService {
     async updateProduct(productId: string, payload: {
         name?: string
         description?: string
-        amount?: number
+        price?: number
         imagePath?: string
     }): Promise<ProductModel> {
         try {
-            const formattedPayload: any = {
-                ...payload,
+            // Include the product ID in the body
+            const requestBody = {
+                id: productId,
+                ...payload
             }
 
-            const response = await axios.put(
-                `${this.store.apiBaseurl}/product/${productId}`,
-                formattedPayload,
+            const response = await axios.patch(
+                `${this.store.apiBaseurl}/products`, // no ID in URL
+                requestBody,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -101,7 +103,7 @@ export default class ProductService {
 
     async deleteProduct(productId: string): Promise<boolean> {
         try {
-            await axios.delete(`${this.store.apiBaseurl}/product/${productId}`, {
+            await axios.delete(`${this.store.apiBaseurl}/products/${productId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     // 'X-API-Key': this.store.xApiKey
